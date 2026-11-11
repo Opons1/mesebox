@@ -74,6 +74,13 @@ function mesebox.can_open(pos)
 	return blocked < 4
 end
 
+function mesebox.get_inventory_drops(pos, listname)
+	local meta = core.get_meta(pos)
+	local inv = meta:get_inventory()
+	local list = inv:get_list(listname)
+	return list	
+end
+
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "mesebox:mesebox" then
@@ -163,8 +170,7 @@ function mesebox.register_mesebox(name, color, desc)
 	end
 
 	def.on_blast = function(pos)
-		local drops = {}
-		mesebox.get_inventory_drops(pos, "main", drops)
+		local drops = mesebox.get_inventory_drops(pos, "main")
 		drops[#drops+1] = name
 		minetest.remove_node(pos)
 		return drops
